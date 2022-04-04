@@ -76,24 +76,11 @@ router.post('/login',async (req,res) =>{
 
 
 //get users data
-router.get('/find/:id',async (req,res)=>{
-   const client = new MongoClient(process.env.MONGOURI)
-   const query = req.query.id
-   try{
-	   await client.connect()
-	   const database = client.db('app-data')
-	   const Users = database.collection('users')
-
-	   const user = await Users.findOne({_id:query})
-	   if(!user)
-	   res.status.send('user not exits')
-
-	   res.status(200).send(user)
-   }
-
-   catch(err){
-	   console.log(err)
-   }
+router.get('/userdata',verifyToken,async (req,res)=>{
+   if(req.user)
+   res.status(200).send(req.user)
+   else
+   res.status(201).send('No user log in')
 })
 
 // Update user
